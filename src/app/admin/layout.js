@@ -1,0 +1,15 @@
+export default function AdminLayout({ children }) {
+  return (
+    <div>
+      <nav className="bg-gray-800 p-4 text-white">
+        <ul className="flex space-x-4">
+          <li>
+            <a href="/admin/dashboard">Dashboard</a>
+          </li>
+          {/* Tambahkan item menu lainnya jika diperlukan */}
+        </ul>
+      </nav>
+      <main>{children}</main>
+    </div>
+  );
+}

@@ -52,7 +52,7 @@ export default function Cart({ isCartOpen, toggleCart, cart, setCart }) {
 
   return (
     <div
-      className={`fixed top-0 right-0 w-64 bg-white shadow-lg p-4 h-full transform transition-transform ${
+      className={`fixed top-0 right-0 w-96 mt-5 bg-white shadow-lg p-4 h-full transform transition-transform ${
         isCartOpen ? "translate-x-0" : "translate-x-full"
       }`}
     >
@@ -79,15 +79,31 @@ export default function Cart({ isCartOpen, toggleCart, cart, setCart }) {
             <span>
               {item.name} (x{item.quantity})
             </span>
-            <div>
-              <button onClick={() => decreaseQuantity(item)}>-</button>
-              <button onClick={() => increaseQuantity(item)}>+</button>
+            <div className="flex gap-4">
+              <button
+                className="text-xl font-bold"
+                onClick={() => decreaseQuantity(item)}
+              >
+                -
+              </button>
+              <button
+                className="text-xl font-bold"
+                onClick={() => increaseQuantity(item)}
+              >
+                +
+              </button>
             </div>
             <span>{item.price * item.quantity}</span>
           </li>
         ))}
       </ul>
-      <p className="font-bold mt-4">Total: {total}</p>
+      <p className="font-bold mt-4">
+        Total:{" "}
+        {new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+        }).format(total)}
+      </p>
       <button
         className="mt-4 p-2 bg-blue-500 text-white w-full"
         onClick={handleOrder}
