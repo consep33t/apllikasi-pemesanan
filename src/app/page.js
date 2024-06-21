@@ -28,12 +28,12 @@ export default function Home() {
   };
 
   return (
-    <div className="w-full h-screen flex justify-center items-center flex-col bg-bg-login bg-cover bg-center bg-no-repeat">
-      <h1 className="text-3xl font-bold mb-52 uppercase font-mono text-slate-100">
+    <div className="w-full h-screen flex justify-center items-center flex-col bg-bg-login bg-cover bg-center bg-no-repeat p-4 sm:p-6 md:p-10">
+      <h1 className="text-3xl font-bold mb-10 uppercase px-3 py-1 rounded-sm text-center text-slate-100 backdrop-brightness-50 backdrop-blur-sm font-mono">
         Selamat datang di aplikasi pemesanan nasi goreng cak lontong
       </h1>
       <form
-        className="flex flex-col rounded w-1/2 p-10 justify-around h-96 backdrop-brightness-50 backdrop-blur-sm font-mono"
+        className="flex flex-col rounded w-full sm:w-3/4 md:w-1/2 p-4 sm:p-6 md:p-10 justify-around backdrop-brightness-50 backdrop-blur-sm font-mono"
         onSubmit={handleSubmit}
       >
         <div className="text-center font-bold text-xl mb-5 text-slate-200">
@@ -43,7 +43,7 @@ export default function Home() {
           Nama
         </label>
         <input
-          className="px-4 py-2 border rounded"
+          className="px-4 py-2 border rounded mb-4"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -54,7 +54,7 @@ export default function Home() {
           Nomor Handphone
         </label>
         <input
-          className="px-4 py-2 border rounded"
+          className="px-4 py-2 border rounded mb-6"
           type="text"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
@@ -62,7 +62,7 @@ export default function Home() {
           required
         />
         <button
-          className="bg-[#B11824] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-[#ec4755] hover:bg-[#B11824] text-white font-bold py-2 px-4 rounded"
           type="submit"
         >
           Masuk
