@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Cart from "./Cart";
+import Cart from "./cart";
 
 export default function Navbar({ cart, setCart }) {
   const [user, setUser] = useState(null);
