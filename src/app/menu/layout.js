@@ -16,7 +16,7 @@ export default function MenuLayout({ children }) {
   }, [router]);
 
   if (!user) {
-    return null; // Atau bisa menampilkan loading indicator
+    return null;
   }
 
   return (

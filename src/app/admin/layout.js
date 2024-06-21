@@ -6,7 +6,9 @@ export default function AdminLayout({ children }) {
           <li>
             <a href="/admin/dashboard">Dashboard</a>
           </li>
-          {/* Tambahkan item menu lainnya jika diperlukan */}
+          <li>
+            <a href="/admin/orders">Orders</a>
+          </li>
         </ul>
       </nav>
       <main>{children}</main>

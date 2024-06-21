@@ -24,6 +24,7 @@ export default function Cart({ isCartOpen, toggleCart, cart, setCart }) {
     sessionStorage.removeItem("cart");
     sessionStorage.removeItem("user");
     toggleCart();
+    alert("Pesanan Berhasil, silahkan tunggu pesanan anda sedang kami proses");
     router.push("/");
   };
 
