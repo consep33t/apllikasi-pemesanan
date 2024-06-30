@@ -37,7 +37,7 @@ export default function Cart({ isCartOpen, toggleCart, cart, setCart }) {
 
     // Panggil API untuk mengirim pesan WhatsApp
     try {
-      const response = await fetch("http://localhost:3000/api/sendMessage", {
+      const response = await fetch(`${process.env.BASE_URL}/api/sendMessage`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
