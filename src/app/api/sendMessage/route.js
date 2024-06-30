@@ -10,7 +10,7 @@ export async function POST(request) {
   const { user, cart, total } = await request.json();
 
   try {
-    const message = `Pesanan baru dari ${user.name}.\n\nItems:\n${cart
+    const message = `Pesanan baru dari aplikasi Pemesanan nasi goreng.\n\nItems:\n${cart
       .map(
         (item) =>
           `${item.name} (x${item.quantity}) - ${item.price * item.quantity} IDR`
