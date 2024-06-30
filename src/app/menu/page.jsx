@@ -1,7 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../../firebaseConfig";
 import Navbar from "../components/navBar";
 import MenuCard from "../components/menuCard";
 
@@ -11,10 +9,19 @@ export default function Menu() {
 
   useEffect(() => {
     const fetchMenu = async () => {
-      const querySnapshot = await getDocs(collection(db, "menu"));
-      const items = [];
-      querySnapshot.forEach((doc) => items.push({ id: doc.id, ...doc.data() }));
-      setMenuItems(items);
+      try {
+        const response = await fetch(
+          "http://localhost:3000/api/admin/dashboard/menu"
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setMenuItems(data.data);
+        } else {
+          console.error("Failed to fetch menu items:", data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching menu items:", error);
+      }
     };
     fetchMenu();
 

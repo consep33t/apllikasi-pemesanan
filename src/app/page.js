@@ -20,10 +20,23 @@ export default function Home() {
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.empty) {
-      await addDoc(collection(db, "users"), { name, phone });
+      await addDoc(collection(db, "users"), {
+        name,
+        phone,
+        role: "customers",
+      });
+      sessionStorage.setItem(
+        "user",
+        JSON.stringify({ name, phone, role: "customers" })
+      );
+    } else {
+      querySnapshot.forEach((doc) => {
+        const userData = doc.data();
+        const { role } = userData;
+        sessionStorage.setItem("user", JSON.stringify({ name, phone, role }));
+      });
     }
 
-    sessionStorage.setItem("user", JSON.stringify({ name, phone }));
     router.push("/menu");
   };
 

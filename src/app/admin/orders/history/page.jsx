@@ -1,7 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import { db } from "../../../../firebaseConfig";
-import { collection, onSnapshot, updateDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  updateDoc,
+  doc,
+  deleteDoc,
+} from "firebase/firestore";
+import { db } from "../../../../../firebaseConfig";
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
@@ -14,7 +20,7 @@ export default function Orders() {
         querySnapshot.forEach((doc) => {
           const orderData = { id: doc.id, ...doc.data() };
           if (
-            orderData.status !==
+            orderData.status ===
             "Pesanan Sudah Diambil, dan Sudah Melakukan Pembayaran"
           ) {
             ordersList.push(orderData);
@@ -26,31 +32,6 @@ export default function Orders() {
 
     return () => unsubscribe();
   }, []);
-
-  const handleComplete = async (orderId) => {
-    const orderRef = doc(db, "orders", orderId);
-    await updateDoc(orderRef, { status: "Pesanan Selesai, silahkan diambil" });
-  };
-
-  const handlePickUp = async (orderId) => {
-    const orderRef = doc(db, "orders", orderId);
-    await updateDoc(orderRef, {
-      status: "Pesanan Sudah Diambil, dan Sudah Melakukan Pembayaran",
-    });
-  };
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Pesanan Diterima":
-        return "bg-red-600";
-      case "Pesanan Selesai, silahkan diambil":
-        return "bg-yellow-600";
-      case "Pesanan Sudah Diambil, dan Sudah Melakukan Pembayaran":
-        return "bg-green-600";
-      default:
-        return "bg-gray-600";
-    }
-  };
 
   const formatDate = (timestamp) => {
     if (!timestamp) {
@@ -68,9 +49,15 @@ export default function Orders() {
     }
   };
 
+  const handleDeleteOrder = async (orderId) => {
+    const orderRef = doc(db, "orders", orderId);
+    await deleteDoc(orderRef, { status: "Pesanan Dihapus" });
+    alert("Pesanan Dihapus");
+  };
+
   return (
     <div className="w-full h-screen">
-      <h1 className="text-center text-2xl font-bold my-4">Pesanan</h1>
+      <h1 className="text-center text-2xl font-bold my-4">History Pesanan</h1>
       <div className="container mx-auto mt-4 w-full">
         <div className="flex overflow-x-auto w-full h-full">
           <table className="w-full h-full table-auto border-collapse border border-black">
@@ -143,11 +130,7 @@ export default function Orders() {
                           className="border border-black px-2 py-1 md:px-4 md:py-2"
                           rowSpan={order.items.length}
                         >
-                          <p
-                            className={`${getStatusColor(
-                              order.status
-                            )} text-white rounded-sm px-2 py-1 text-center`}
-                          >
+                          <p className="text-white rounded-sm px-2 py-1 text-center bg-green-500">
                             {order.status}
                           </p>
                         </td>
@@ -156,16 +139,10 @@ export default function Orders() {
                           rowSpan={order.items.length}
                         >
                           <button
-                            onClick={() => handleComplete(order.id)}
-                            className="mr-2 bg-blue-500 text-white px-2 py-1 md:px-4 md:py-2 rounded"
+                            onClick={() => handleDeleteOrder(order.id)}
+                            className="mr-2 bg-red-500 text-white px-2 py-1 md:px-4 md:py-2 rounded"
                           >
-                            Pesanan Selesai
-                          </button>
-                          <button
-                            onClick={() => handlePickUp(order.id)}
-                            className="mt-2 bg-green-500 text-white px-2 py-1 md:px-4 md:py-2 rounded"
-                          >
-                            Pesanan Diambil
+                            Hapus History Pesanan
                           </button>
                         </td>
                       </>

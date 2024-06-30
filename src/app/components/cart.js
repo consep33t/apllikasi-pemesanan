@@ -1,3 +1,5 @@
+// components/Cart.js
+
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -16,15 +18,49 @@ export default function Cart({ isCartOpen, toggleCart, cart, setCart }) {
   }, []);
 
   const handleOrder = async () => {
+    if (!user) {
+      alert("User tidak ditemukan. Pastikan Anda sudah login.");
+      return;
+    }
+
     await addDoc(collection(db, "orders"), {
       user: user,
       items: cart,
       status: "Pesanan Diterima",
+      date: new Date(),
     });
+
+    const total = cart.reduce(
+      (acc, item) => acc + item.price * item.quantity,
+      0
+    );
+
+    // Panggil API untuk mengirim pesan WhatsApp
+    try {
+      const response = await fetch("http://localhost:3000/api/sendMessage", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user, cart, total }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert(
+          "Pesanan Berhasil, silahkan tunggu pesanan anda sedang kami proses"
+        );
+      } else {
+        alert(data.error || "Terjadi kesalahan saat mengirim pesan.");
+      }
+    } catch (error) {
+      console.error("Terjadi kesalahan saat mengirim pesan:", error);
+      alert("Terjadi kesalahan saat mengirim pesan.");
+    }
+
     sessionStorage.removeItem("cart");
     sessionStorage.removeItem("user");
     toggleCart();
-    alert("Pesanan Berhasil, silahkan tunggu pesanan anda sedang kami proses");
     router.push("/");
   };
 

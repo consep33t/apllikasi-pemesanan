@@ -3,6 +3,7 @@ import { useState } from "react";
 import { db, storage } from "../../../../firebaseConfig";
 import { collection, addDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useRouter } from "next/navigation";
 
 export default function AdminDashboard() {
   const [name, setName] = useState("");
@@ -10,6 +11,13 @@ export default function AdminDashboard() {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("admin");
+    router.push("/admin/login");
+  };
 
   const handleImageChange = (e) => {
     if (e.target.files[0]) {
@@ -44,6 +52,12 @@ export default function AdminDashboard() {
 
   return (
     <div className="container mx-auto p-4">
+      <button
+        onClick={handleLogout}
+        className="bg-red-500 text-white p-2 rounded hover:bg-red-600"
+      >
+        Logout
+      </button>
       <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">

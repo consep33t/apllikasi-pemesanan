@@ -3,11 +3,13 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Cart from "./cart";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Navbar({ cart, setCart }) {
   const [user, setUser] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -15,6 +17,7 @@ export default function Navbar({ cart, setCart }) {
       setUser(savedUser);
     }
   }, []);
+  console.log(user);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -24,14 +27,25 @@ export default function Navbar({ cart, setCart }) {
     setIsCartOpen(!isCartOpen);
   };
 
+  const handleLogout = () => {
+    sessionStorage.removeItem("user");
+    router.push("/");
+  };
+
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   return (
     <div>
       <div className="fixed w-full z-10 bg-white shadow">
         <div className="flex justify-between items-center p-4">
-          <div className="text-lg font-semibold">
+          <div className="text-lg font-semibold space-x-4">
             {user && <span>Hi, {user.name}</span>}
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm"
+            >
+              logout
+            </button>
           </div>
           <div className="lg:hidden flex space-x-4 items-center">
             <button onClick={toggleMenu}>
