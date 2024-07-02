@@ -1,5 +1,3 @@
-// components/Cart.js
-
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -34,8 +32,6 @@ export default function Cart({ isCartOpen, toggleCart, cart, setCart }) {
       (acc, item) => acc + item.price * item.quantity,
       0
     );
-
-    // Panggil API untuk mengirim pesan WhatsApp
     try {
       const response = await fetch(`${process.env.BASE_URL}/api/sendMessage`, {
         method: "POST",

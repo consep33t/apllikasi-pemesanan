@@ -29,12 +29,10 @@ export default function AdminDashboard() {
     e.preventDefault();
     setLoading(true);
 
-    // Upload image to Firestore Storage
     const storageRef = ref(storage, `menuImages/${image.name}`);
     await uploadBytes(storageRef, image);
     const imageUrl = await getDownloadURL(storageRef);
 
-    // Add menu data to Firestore Database
     await addDoc(collection(db, "menu"), {
       name,
       price: parseFloat(price),

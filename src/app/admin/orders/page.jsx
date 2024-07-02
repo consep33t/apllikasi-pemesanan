@@ -1,42 +1,46 @@
 "use client";
 import { useState, useEffect } from "react";
-import { db } from "../../../../firebaseConfig";
-import { collection, onSnapshot, updateDoc, doc } from "firebase/firestore";
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
 
-  useEffect(() => {
-    const unsubscribe = onSnapshot(
-      collection(db, "orders"),
-      (querySnapshot) => {
-        const ordersList = [];
-        querySnapshot.forEach((doc) => {
-          const orderData = { id: doc.id, ...doc.data() };
-          if (
-            orderData.status !==
-            "Pesanan Sudah Diambil, dan Sudah Melakukan Pembayaran"
-          ) {
-            ordersList.push(orderData);
-          }
-        });
-        setOrders(ordersList);
+  const fetchOrders = async () => {
+    try {
+      const response = await fetch("/api/admin/orders");
+      const data = await response.json();
+      if (response.status === 200) {
+        setOrders(data.data);
+      } else {
+        console.error("Failed to fetch orders:", data.message);
       }
-    );
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
 
-    return () => unsubscribe();
+  useEffect(() => {
+    fetchOrders();
   }, []);
-
   const handleComplete = async (orderId) => {
-    const orderRef = doc(db, "orders", orderId);
-    await updateDoc(orderRef, { status: "Pesanan Selesai, silahkan diambil" });
+    const response = await fetch(`/api/admin/orders/${orderId}/complete`, {
+      method: "POST",
+    });
+    if (response.ok) {
+      await fetchOrders();
+    } else {
+      console.error("Failed to complete order");
+    }
   };
 
   const handlePickUp = async (orderId) => {
-    const orderRef = doc(db, "orders", orderId);
-    await updateDoc(orderRef, {
-      status: "Pesanan Sudah Diambil, dan Sudah Melakukan Pembayaran",
+    const response = await fetch(`/api/admin/orders/${orderId}/pickup`, {
+      method: "POST",
     });
+    if (response.ok) {
+      await fetchOrders();
+    } else {
+      console.error("Failed to pick up order");
+    }
   };
 
   const getStatusColor = (status) => {

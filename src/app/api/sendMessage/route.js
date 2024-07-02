@@ -7,10 +7,31 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = new Twilio(accountSid, authToken);
 
 export async function POST(request) {
-  const { user, cart, total } = await request.json();
-
   try {
-    const message = `Pesanan baru dari aplikasi Pemesanan nasi goreng.\n\nItems:\n${cart
+    const { user, cart, total } = await request.json();
+    console.log(user);
+
+    // Verifikasi nomor telepon menggunakan Twilio Verify Service
+    const verification = await client.verify
+      .services(process.env.TWILIO_VERIFICATION_SID)
+      .verifications.create({
+        to: `whatsapp:+${user.phone.replace(/^0/, "62")}`,
+        channel: "whatsapp",
+      });
+
+    console.log(verification.status);
+
+    if (verification.status === "pending") {
+      return NextResponse.json({
+        message:
+          "Kode verifikasi telah dikirim. Mohon verifikasi nomor telepon Anda.",
+      });
+    }
+
+    // Jika verifikasi berhasil, lanjutkan untuk mengirim pesan WhatsApp
+    const message = `Pesanan baru dari aplikasi Pemesanan kepada ${
+      user.name
+    }:\n\nItems:\n${cart
       .map(
         (item) =>
           `${item.name} (x${item.quantity}) - ${item.price * item.quantity} IDR`

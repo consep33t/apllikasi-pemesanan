@@ -1,36 +1,28 @@
 "use client";
 import { useState, useEffect } from "react";
-import {
-  collection,
-  onSnapshot,
-  updateDoc,
-  doc,
-  deleteDoc,
-} from "firebase/firestore";
+import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../../../../../firebaseConfig";
+import { NextResponse } from "next/server";
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
 
-  useEffect(() => {
-    const unsubscribe = onSnapshot(
-      collection(db, "orders"),
-      (querySnapshot) => {
-        const ordersList = [];
-        querySnapshot.forEach((doc) => {
-          const orderData = { id: doc.id, ...doc.data() };
-          if (
-            orderData.status ===
-            "Pesanan Sudah Diambil, dan Sudah Melakukan Pembayaran"
-          ) {
-            ordersList.push(orderData);
-          }
-        });
-        setOrders(ordersList);
+  const fetchOrders = async () => {
+    try {
+      const response = await fetch("/api/admin/orders/history");
+      const data = await response.json();
+      if (response.status === 200) {
+        setOrders(data.data);
+      } else {
+        console.error("Failed to fetch orders history:", data.message);
       }
-    );
+    } catch (error) {
+      console.error("Error fetching orders history:", error);
+    }
+  };
 
-    return () => unsubscribe();
+  useEffect(() => {
+    fetchOrders();
   }, []);
 
   const formatDate = (timestamp) => {
@@ -50,9 +42,16 @@ export default function Orders() {
   };
 
   const handleDeleteOrder = async (orderId) => {
-    const orderRef = doc(db, "orders", orderId);
-    await deleteDoc(orderRef, { status: "Pesanan Dihapus" });
-    alert("Pesanan Dihapus");
+    const response = await fetch(`/api/admin/orders/history/${orderId}`, {
+      method: "DELETE",
+    });
+    if (response.ok) {
+      alert("Order deleted successfully");
+      await fetchOrders();
+      return NextResponse.json({ status: 200, message: "Order deleted" });
+    } else {
+      console.error("Failed to complete order");
+    }
   };
 
   return (

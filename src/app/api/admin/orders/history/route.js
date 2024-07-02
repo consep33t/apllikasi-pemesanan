@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { db } from "../../../../../firebaseConfig";
+import { db } from "../../../../../../firebaseConfig";
 import { collection, onSnapshot } from "firebase/firestore";
 
 export async function GET() {
@@ -12,7 +12,7 @@ export async function GET() {
           querySnapshot.forEach((doc) => {
             const orderData = { id: doc.id, ...doc.data() };
             if (
-              orderData.status !==
+              orderData.status ===
               "Pesanan Sudah Diambil, dan Sudah Melakukan Pembayaran"
             ) {
               ordersList.push(orderData);
