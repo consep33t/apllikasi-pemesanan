@@ -1,7 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import { doc, deleteDoc } from "firebase/firestore";
-import { db } from "../../../../../firebaseConfig";
 import { NextResponse } from "next/server";
 
 export default function Orders() {

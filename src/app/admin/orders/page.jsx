@@ -23,32 +23,24 @@ export default function Orders() {
   }, []);
 
   const handleComplete = async (orderId) => {
-    try {
-      const response = await fetch(`/api/admin/orders/${orderId}/complete`, {
-        method: "POST",
-      });
-      if (response.ok) {
-        await fetchOrders();
-      } else {
-        console.error("Failed to complete order");
-      }
-    } catch (error) {
-      console.error("Error completing order:", error);
+    const response = await fetch(`/api/admin/orders/${orderId}/complete`, {
+      method: "POST",
+    });
+    if (response.ok) {
+      await fetchOrders();
+    } else {
+      console.error("Failed to complete order");
     }
   };
 
   const handlePickUp = async (orderId) => {
-    try {
-      const response = await fetch(`/api/admin/orders/${orderId}/pickup`, {
-        method: "POST",
-      });
-      if (response.ok) {
-        await fetchOrders();
-      } else {
-        console.error("Failed to pick up order");
-      }
-    } catch (error) {
-      console.error("Error picking up order:", error);
+    const response = await fetch(`/api/admin/orders/${orderId}/pickup`, {
+      method: "POST",
+    });
+    if (response.ok) {
+      await fetchOrders(); // Refetch orders after picking up an order
+    } else {
+      console.error("Failed to pick up order");
     }
   };
 
