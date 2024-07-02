@@ -21,25 +21,34 @@ export default function Orders() {
   useEffect(() => {
     fetchOrders();
   }, []);
+
   const handleComplete = async (orderId) => {
-    const response = await fetch(`/api/admin/orders/${orderId}/complete`, {
-      method: "POST",
-    });
-    if (response.ok) {
-      await fetchOrders();
-    } else {
-      console.error("Failed to complete order");
+    try {
+      const response = await fetch(`/api/admin/orders/${orderId}/complete`, {
+        method: "POST",
+      });
+      if (response.ok) {
+        await fetchOrders();
+      } else {
+        console.error("Failed to complete order");
+      }
+    } catch (error) {
+      console.error("Error completing order:", error);
     }
   };
 
   const handlePickUp = async (orderId) => {
-    const response = await fetch(`/api/admin/orders/${orderId}/pickup`, {
-      method: "POST",
-    });
-    if (response.ok) {
-      await fetchOrders();
-    } else {
-      console.error("Failed to pick up order");
+    try {
+      const response = await fetch(`/api/admin/orders/${orderId}/pickup`, {
+        method: "POST",
+      });
+      if (response.ok) {
+        await fetchOrders();
+      } else {
+        console.error("Failed to pick up order");
+      }
+    } catch (error) {
+      console.error("Error picking up order:", error);
     }
   };
 
@@ -61,7 +70,7 @@ export default function Orders() {
       return "Tanggal tidak tersedia";
     }
     try {
-      const date = timestamp.toDate();
+      const date = new Date(timestamp.seconds * 1000);
       return new Intl.DateTimeFormat("id-ID", {
         dateStyle: "medium",
         timeStyle: "short",

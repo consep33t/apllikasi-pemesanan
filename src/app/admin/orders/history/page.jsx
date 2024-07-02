@@ -30,7 +30,7 @@ export default function Orders() {
       return "Tanggal tidak tersedia";
     }
     try {
-      const date = timestamp.toDate();
+      const date = new Date(timestamp.seconds * 1000);
       return new Intl.DateTimeFormat("id-ID", {
         dateStyle: "medium",
         timeStyle: "short",
