@@ -9,7 +9,6 @@ const client = new Twilio(accountSid, authToken);
 export async function POST(request) {
   try {
     const { user, cart, total } = await request.json();
-    console.log(user);
 
     // Verifikasi nomor telepon menggunakan Twilio Verify Service
     const verification = await client.verify
