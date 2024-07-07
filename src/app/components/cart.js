@@ -21,24 +21,34 @@ export default function Cart({ isCartOpen, toggleCart, cart, setCart }) {
       alert("User tidak ditemukan. Pastikan Anda sudah login.");
       return;
     }
-
-    await addDoc(collection(db, "orders"), {
-      user: user,
-      items: cart,
-      status: "Pesanan Diterima",
-      date: new Date(),
-      descriptionOrder,
-    });
-
-    setDescriptionOrder("");
-    const total = cart.reduce(
-      (acc, item) => acc + item.price * item.quantity,
-      0
-    );
-    sessionStorage.removeItem("cart");
-    sessionStorage.removeItem("user");
-    toggleCart();
-    router.push("/");
+    try {
+      await addDoc(collection(db, "orders"), {
+        user: user,
+        items: cart,
+        status: "Pesanan Diterima",
+        date: new Date(),
+        descriptionOrder,
+      });
+      setDescriptionOrder("");
+      const total = cart.reduce(
+        (acc, item) => acc + item.price * item.quantity,
+        0
+      );
+      sessionStorage.removeItem("cart");
+      sessionStorage.removeItem("user");
+      toggleCart();
+      alert(`Pesanan anda sebesar ${total} sudah diterima. Terima kasih.`);
+      router.push("/");
+    } catch (error) {
+      console.error("Error fetching menu item:", error);
+    }
+    // await addDoc(collection(db, "orders"), {
+    //   user: user,
+    //   items: cart,
+    //   status: "Pesanan Diterima",
+    //   date: new Date(),
+    //   descriptionOrder,
+    // });
   };
 
   const increaseQuantity = (item) => {
