@@ -17,8 +17,7 @@
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18",
-    "rimraf": "^5.0.7",
-    "twilio": "^5.2.1"
+    "rimraf": "^5.0.7"
   },
   "devDependencies": {
     "daisyui": "^4.12.10",
