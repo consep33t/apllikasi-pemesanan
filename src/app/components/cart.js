@@ -1,8 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { db } from "../../../firebaseConfig";
-import { collection, addDoc } from "firebase/firestore";
 
 export default function Cart({ isCartOpen, toggleCart, cart, setCart }) {
   const [user, setUser] = useState(null);
@@ -17,38 +15,37 @@ export default function Cart({ isCartOpen, toggleCart, cart, setCart }) {
   }, []);
 
   const handleOrder = async () => {
-    if (!user) {
-      alert("User tidak ditemukan. Pastikan Anda sudah login.");
-      return;
-    }
     try {
-      await addDoc(collection(db, "orders"), {
-        user: user,
-        items: cart,
-        status: "Pesanan Diterima",
-        date: new Date(),
-        descriptionOrder,
+      const response = await fetch("/api/admin/orders/addorder", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user,
+          items: cart,
+          descriptionOrder,
+        }),
       });
-      setDescriptionOrder("");
-      const total = cart.reduce(
-        (acc, item) => acc + item.price * item.quantity,
-        0
-      );
-      sessionStorage.removeItem("cart");
-      sessionStorage.removeItem("user");
-      toggleCart();
-      alert(`Pesanan anda sebesar ${total} sudah diterima. Terima kasih.`);
-      router.push("/");
+
+      if (response.ok) {
+        setDescriptionOrder("");
+        const total = cart.reduce(
+          (acc, item) => acc + item.price * item.quantity,
+          0
+        );
+        sessionStorage.removeItem("cart");
+        sessionStorage.removeItem("user");
+        toggleCart();
+        alert(`Pesanan anda sebesar ${total} sudah diterima. Terima kasih.`);
+        router.push("/");
+      } else {
+        alert("Terjadi kesalahan. Silahkan coba lagi.");
+      }
     } catch (error) {
-      console.error("Error fetching menu item:", error);
+      alert("Terjadi kesalahan. Silahkan coba lagi.");
+      console.error("Error adding order:", error);
     }
-    // await addDoc(collection(db, "orders"), {
-    //   user: user,
-    //   items: cart,
-    //   status: "Pesanan Diterima",
-    //   date: new Date(),
-    //   descriptionOrder,
-    // });
   };
 
   const increaseQuantity = (item) => {

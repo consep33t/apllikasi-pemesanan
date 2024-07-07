@@ -1,8 +1,5 @@
 "use client";
 import { useState } from "react";
-import { db, storage } from "../../../../firebaseConfig";
-import { collection, addDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useRouter } from "next/navigation";
 
 export default function AdminDashboard() {
@@ -10,6 +7,7 @@ export default function AdminDashboard() {
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
+  const [type, setType] = useState("");
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
@@ -29,23 +27,41 @@ export default function AdminDashboard() {
     e.preventDefault();
     setLoading(true);
 
-    const storageRef = ref(storage, `menuImages/${image.name}`);
-    await uploadBytes(storageRef, image);
-    const imageUrl = await getDownloadURL(storageRef);
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64String = reader.result
+        .replace("data:", "")
+        .replace(/^.+,/, "");
 
-    await addDoc(collection(db, "menu"), {
-      name,
-      price: parseFloat(price),
-      description,
-      imageUrl,
-    });
+      const response = await fetch("/api/admin/dashboard/menu/addmenu", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          price,
+          description,
+          imageName: image.name,
+          imageData: base64String,
+          type,
+        }),
+      });
 
-    setLoading(false);
-    setName("");
-    setPrice("");
-    setDescription("");
-    setImage(null);
-    alert("Menu added successfully!");
+      if (response.ok) {
+        setName("");
+        setPrice("");
+        setDescription("");
+        setImage(null);
+        setType("");
+        alert("Menu added successfully!");
+      } else {
+        alert("Error adding menu.");
+      }
+
+      setLoading(false);
+    };
+    reader.readAsDataURL(image);
   };
 
   return (
@@ -95,6 +111,16 @@ export default function AdminDashboard() {
             className="w-full p-2 border border-gray-300 rounded"
             required
           />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700">Type</label>
+          <textarea
+            value={type}
+            placeholder="pilih salah satu dari makanan, minuman, atau condimen"
+            onChange={(e) => setType(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded"
+            required
+          ></textarea>
         </div>
         <button
           type="submit"
