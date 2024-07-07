@@ -1,61 +1,27 @@
 "use client";
 import { useState, useEffect } from "react";
+import { NextResponse } from "next/server";
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch("/api/admin/orders");
+      const response = await fetch("/api/admin/orders/history");
       const data = await response.json();
       if (response.status === 200) {
         setOrders(data.data);
       } else {
-        console.error("Failed to fetch orders:", data.message);
+        console.error("Failed to fetch orders history:", data.message);
       }
     } catch (error) {
-      console.error("Error fetching orders:", error);
+      console.error("Error fetching orders history:", error);
     }
   };
 
   useEffect(() => {
     fetchOrders();
   }, []);
-
-  const handleComplete = async (orderId) => {
-    const response = await fetch(`/api/admin/orders/${orderId}/complete`, {
-      method: "POST",
-    });
-    if (response.ok) {
-      await fetchOrders();
-    } else {
-      console.error("Failed to complete order");
-    }
-  };
-
-  const handlePickUp = async (orderId) => {
-    const response = await fetch(`/api/admin/orders/${orderId}/pickup`, {
-      method: "POST",
-    });
-    if (response.ok) {
-      await fetchOrders(); // Refetch orders after picking up an order
-    } else {
-      console.error("Failed to pick up order");
-    }
-  };
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Pesanan Diterima":
-        return "bg-red-600";
-      case "Pesanan Selesai, silahkan diambil":
-        return "bg-yellow-600";
-      case "Pesanan Sudah Diambil, dan Sudah Melakukan Pembayaran":
-        return "bg-green-600";
-      default:
-        return "bg-gray-600";
-    }
-  };
 
   const formatDate = (timestamp) => {
     if (!timestamp) {
@@ -73,9 +39,22 @@ export default function Orders() {
     }
   };
 
+  const handleDeleteOrder = async (orderId) => {
+    const response = await fetch(`/api/admin/orders/history/${orderId}`, {
+      method: "DELETE",
+    });
+    if (response.ok) {
+      alert("Order deleted successfully");
+      await fetchOrders();
+      return NextResponse.json({ status: 200, message: "Order deleted" });
+    } else {
+      console.error("Failed to complete order");
+    }
+  };
+
   return (
     <div className="w-full h-screen">
-      <h1 className="text-center text-2xl font-bold my-4">Pesanan</h1>
+      <h1 className="text-center text-2xl font-bold my-4">History Pesanan</h1>
       <div className="container mx-auto mt-4 w-full">
         <div className="flex overflow-x-auto w-full h-full">
           <table className="w-full h-full table-auto border-collapse border border-black">
@@ -148,11 +127,7 @@ export default function Orders() {
                           className="border border-black px-2 py-1 md:px-4 md:py-2"
                           rowSpan={order.items.length}
                         >
-                          <p
-                            className={`${getStatusColor(
-                              order.status
-                            )} text-white rounded-sm px-2 py-1 text-center`}
-                          >
+                          <p className="text-white rounded-sm px-2 py-1 text-center bg-green-500">
                             {order.status}
                           </p>
                         </td>
@@ -161,16 +136,10 @@ export default function Orders() {
                           rowSpan={order.items.length}
                         >
                           <button
-                            onClick={() => handleComplete(order.id)}
-                            className="mr-2 bg-blue-500 text-white px-2 py-1 md:px-4 md:py-2 rounded"
+                            onClick={() => handleDeleteOrder(order.id)}
+                            className="mr-2 bg-red-500 text-white px-2 py-1 md:px-4 md:py-2 rounded"
                           >
-                            Pesanan Selesai
-                          </button>
-                          <button
-                            onClick={() => handlePickUp(order.id)}
-                            className="mt-2 bg-green-500 text-white px-2 py-1 md:px-4 md:py-2 rounded"
-                          >
-                            Pesanan Diambil
+                            Hapus History Pesanan
                           </button>
                         </td>
                       </>

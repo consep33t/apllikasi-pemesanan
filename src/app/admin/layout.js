@@ -9,6 +9,9 @@ export default function AdminLayout({ children }) {
           <li>
             <a href="/admin/orders">Orders</a>
           </li>
+          <li>
+            <a href="/admin/orders/history">Orders History</a>
+          </li>
         </ul>
       </nav>
       <main>{children}</main>

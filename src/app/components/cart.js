@@ -6,6 +6,7 @@ import { collection, addDoc } from "firebase/firestore";
 
 export default function Cart({ isCartOpen, toggleCart, cart, setCart }) {
   const [user, setUser] = useState(null);
+  const [descriptionOrder, setDescriptionOrder] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -16,15 +17,27 @@ export default function Cart({ isCartOpen, toggleCart, cart, setCart }) {
   }, []);
 
   const handleOrder = async () => {
+    if (!user) {
+      alert("User tidak ditemukan. Pastikan Anda sudah login.");
+      return;
+    }
+
     await addDoc(collection(db, "orders"), {
       user: user,
       items: cart,
       status: "Pesanan Diterima",
+      date: new Date(),
+      descriptionOrder,
     });
+
+    setDescriptionOrder("");
+    const total = cart.reduce(
+      (acc, item) => acc + item.price * item.quantity,
+      0
+    );
     sessionStorage.removeItem("cart");
     sessionStorage.removeItem("user");
     toggleCart();
-    alert("Pesanan Berhasil, silahkan tunggu pesanan anda sedang kami proses");
     router.push("/");
   };
 
@@ -105,6 +118,12 @@ export default function Cart({ isCartOpen, toggleCart, cart, setCart }) {
           currency: "IDR",
         }).format(total)}
       </p>
+      <textarea
+        placeholder="Deskripsi pesanan"
+        value={descriptionOrder}
+        className="w-full mt-4"
+        onChange={(e) => setDescriptionOrder(e.target.value)}
+      ></textarea>
       <button
         className="mt-4 p-2 bg-blue-500 text-white w-full"
         onClick={handleOrder}
