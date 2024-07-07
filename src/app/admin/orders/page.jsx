@@ -28,8 +28,10 @@ export default function Orders() {
     });
     if (response.ok) {
       await fetchOrders();
+      alert("Order completed successfully");
     } else {
       console.error("Failed to complete order");
+      alert("Failed to complete order");
     }
   };
 
@@ -38,9 +40,11 @@ export default function Orders() {
       method: "POST",
     });
     if (response.ok) {
-      await fetchOrders(); // Refetch orders after picking up an order
+      await fetchOrders();
+      alert("Order picked up successfully");
     } else {
       console.error("Failed to pick up order");
+      alert("Failed to pick up order");
     }
   };
 
