@@ -1,25 +1,28 @@
 "use client";
 import { useState, useEffect } from "react";
+import { collection, query, onSnapshot } from "firebase/firestore";
+import { db } from "../../../../firebaseConfig";
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
 
-  const fetchOrders = async () => {
-    try {
-      const response = await fetch("/api/admin/orders");
-      const data = await response.json();
-      if (response.status === 200) {
-        setOrders(data.data);
-      } else {
-        console.error("Failed to fetch orders:", data.message);
-      }
-    } catch (error) {
-      console.error("Error fetching orders:", error);
-    }
-  };
-
   useEffect(() => {
-    fetchOrders();
+    const q = query(collection(db, "orders"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const ordersData = [];
+      querySnapshot.forEach((doc) => {
+        const orderData = { id: doc.id, ...doc.data() };
+        if (
+          orderData.status !==
+          "Pesanan Sudah Diambil, dan Sudah Melakukan Pembayaran"
+        ) {
+          ordersData.push(orderData);
+        }
+      });
+      setOrders(ordersData);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const handleComplete = async (orderId) => {
@@ -27,7 +30,6 @@ export default function Orders() {
       method: "POST",
     });
     if (response.ok) {
-      await fetchOrders();
       alert("Order completed successfully");
     } else {
       console.error("Failed to complete order");
@@ -40,7 +42,6 @@ export default function Orders() {
       method: "POST",
     });
     if (response.ok) {
-      await fetchOrders();
       alert("Order picked up successfully");
     } else {
       console.error("Failed to pick up order");

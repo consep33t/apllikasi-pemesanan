@@ -1,28 +1,30 @@
 "use client";
 import { useState, useEffect } from "react";
 import { NextResponse } from "next/server";
+import { db } from "../../../../../firebaseConfig";
+import { collection, query, onSnapshot } from "firebase/firestore";
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
 
-  const fetchOrders = async () => {
-    try {
-      const response = await fetch("/api/admin/orders/history");
-      const data = await response.json();
-      if (response.status === 200) {
-        setOrders(data.data);
-      } else {
-        console.error("Failed to fetch orders history:", data.message);
-      }
-    } catch (error) {
-      console.error("Error fetching orders history:", error);
-    }
-  };
-
   useEffect(() => {
-    fetchOrders();
-  }, []);
+    const q = query(collection(db, "orders"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const ordersData = [];
+      querySnapshot.forEach((doc) => {
+        const orderData = { id: doc.id, ...doc.data() };
+        if (
+          orderData.status ===
+          "Pesanan Sudah Diambil, dan Sudah Melakukan Pembayaran"
+        ) {
+          ordersData.push(orderData);
+        }
+      });
+      setOrders(ordersData);
+    });
 
+    return () => unsubscribe();
+  }, []);
   const formatDate = (timestamp) => {
     if (!timestamp) {
       return "Tanggal tidak tersedia";
@@ -45,7 +47,6 @@ export default function Orders() {
     });
     if (response.ok) {
       alert("Order deleted successfully");
-      await fetchOrders();
       return NextResponse.json({ status: 200, message: "Order deleted" });
     } else {
       console.error("Failed to complete order");
