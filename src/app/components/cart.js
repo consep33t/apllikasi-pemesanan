@@ -73,7 +73,7 @@ export default function Cart({ isCartOpen, toggleCart, cart, setCart }) {
 
   return (
     <div
-      className={`fixed top-0 right-0 w-96 mt-5 bg-white shadow-lg p-4 h-full transform transition-transform ${
+      className={`fixed top-0 right-0 w-96 mt-5 bg-white shadow-lg p-4 h-full transform transition-transform z-50 ${
         isCartOpen ? "translate-x-0" : "translate-x-full"
       }`}
     >
@@ -132,7 +132,7 @@ export default function Cart({ isCartOpen, toggleCart, cart, setCart }) {
         onChange={(e) => setDescriptionOrder(e.target.value)}
       ></textarea>
       <button
-        className="mt-4 p-2 bg-blue-500 text-white w-full"
+        className="mt-4 p-2 bg-[#d9727b] hover:bg-[#B11824] transition-colors duration-200 border-none text-white w-full"
         onClick={handleOrder}
       >
         Pesan

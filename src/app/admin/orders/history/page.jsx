@@ -54,104 +54,63 @@ export default function Orders() {
   };
 
   return (
-    <div className="w-full h-screen">
-      <h1 className="text-center text-2xl font-bold my-4">History Pesanan</h1>
-      <div className="container mx-auto mt-4 w-full">
-        <div className="flex overflow-x-auto w-full h-full">
-          <table className="w-full h-full table-auto border-collapse border border-black">
-            <thead>
-              <tr>
-                <th className="border border-black px-2 py-1 md:px-4 md:py-2">
-                  Nama
-                </th>
-                <th className="border border-black px-2 py-1 md:px-4 md:py-2">
-                  No. HP
-                </th>
-                <th className="border border-black px-2 py-1 md:px-4 md:py-2">
-                  Menu - Harga
-                </th>
-                <th className="border border-black px-2 py-1 md:px-4 md:py-2">
-                  Total
-                </th>
-                <th className="border border-black px-2 py-1 md:px-4 md:py-2">
-                  Tanggal
-                </th>
-                <th className="border border-black px-2 py-1 md:px-4 md:py-2">
-                  Status
-                </th>
-                <th className="border border-black px-2 py-1 md:px-4 md:py-2">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            {orders.map((order) => (
-              <tbody key={order.id}>
-                {order.items.map((item, index) => (
-                  <tr key={index}>
-                    {index === 0 && (
-                      <>
-                        <td
-                          className="border border-black px-2 py-1 md:px-4 md:py-2"
-                          rowSpan={order.items.length}
-                        >
-                          {order.user.name}
-                        </td>
-                        <td
-                          className="border border-black px-2 py-1 md:px-4 md:py-2"
-                          rowSpan={order.items.length}
-                        >
-                          {order.user.phone}
-                        </td>
-                      </>
-                    )}
-                    <td className="border border-black px-2 py-1 md:px-4 md:py-2">
-                      {item.name} - {item.price}
+    <div className="overflow-x-auto">
+      <table className="table table-xs table-pin-rows table-pin-cols">
+        <thead>
+          <tr>
+            <th>Nama</th>
+            <th>No. HP</th>
+            <th>Menu - Harga</th>
+            <th>Total</th>
+            <th>Tanggal</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        {orders.map((order) => (
+          <tbody key={order.id}>
+            {order.items.map((item, index) => (
+              <tr key={index}>
+                {index === 0 && (
+                  <>
+                    <td rowSpan={order.items.length}>{order.user.name}</td>
+                    <td rowSpan={order.items.length}>{order.user.phone}</td>
+                  </>
+                )}
+                <td>
+                  {item.name} - {item.price}
+                </td>
+                {index === 0 && (
+                  <>
+                    <td rowSpan={order.items.length}>
+                      {order.items.reduce(
+                        (total, item) => total + item.price,
+                        0
+                      )}
                     </td>
-                    {index === 0 && (
-                      <>
-                        <td
-                          className="border border-black px-2 py-1 md:px-4 md:py-2"
-                          rowSpan={order.items.length}
-                        >
-                          {order.items.reduce(
-                            (total, item) => total + item.price,
-                            0
-                          )}
-                        </td>
-                        <td
-                          className="border border-black px-2 py-1 md:px-4 md:py-2"
-                          rowSpan={order.items.length}
-                        >
-                          {formatDate(order.date)}
-                        </td>
-                        <td
-                          className="border border-black px-2 py-1 md:px-4 md:py-2"
-                          rowSpan={order.items.length}
-                        >
-                          <p className="text-white rounded-sm px-2 py-1 text-center bg-green-500">
-                            {order.status}
-                          </p>
-                        </td>
-                        <td
-                          className="border border-black px-2 py-1 md:px-4 md:py-2"
-                          rowSpan={order.items.length}
-                        >
-                          <button
-                            onClick={() => handleDeleteOrder(order.id)}
-                            className="mr-2 bg-red-500 text-white px-2 py-1 md:px-4 md:py-2 rounded"
-                          >
-                            Hapus History Pesanan
-                          </button>
-                        </td>
-                      </>
-                    )}
-                  </tr>
-                ))}
-              </tbody>
+                    <td rowSpan={order.items.length}>
+                      {formatDate(order.date)}
+                    </td>
+                    <td rowSpan={order.items.length}>
+                      <p className="text-white rounded-sm px-2 py-1 text-center bg-green-500">
+                        {order.status}
+                      </p>
+                    </td>
+                    <td rowSpan={order.items.length}>
+                      <button
+                        onClick={() => handleDeleteOrder(order.id)}
+                        className="mr-2 bg-red-500 text-white px-2 py-1 md:px-4 md:py-2 rounded"
+                      >
+                        Hapus History Pesanan
+                      </button>
+                    </td>
+                  </>
+                )}
+              </tr>
             ))}
-          </table>
-        </div>
-      </div>
+          </tbody>
+        ))}
+      </table>
     </div>
   );
 }

@@ -66,12 +66,6 @@ export default function AdminDashboard() {
 
   return (
     <div className="container mx-auto p-4">
-      <button
-        onClick={handleLogout}
-        className="bg-red-500 text-white p-2 rounded hover:bg-red-600"
-      >
-        Logout
-      </button>
       <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
