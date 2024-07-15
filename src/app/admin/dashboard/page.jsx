@@ -118,7 +118,7 @@ export default function AdminDashboard() {
         </div>
         <button
           type="submit"
-          className="bg-blue-500 text-white p-2 rounded"
+          className="bg-[#B11824] text-white p-2 rounded"
           disabled={loading}
         >
           {loading ? "Uploading..." : "Add Menu"}
