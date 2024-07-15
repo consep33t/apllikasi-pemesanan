@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function AdminDashboard() {
   const [name, setName] = useState("");
@@ -9,13 +8,6 @@ export default function AdminDashboard() {
   const [image, setImage] = useState(null);
   const [type, setType] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const router = useRouter();
-
-  const handleLogout = () => {
-    sessionStorage.removeItem("admin");
-    router.push("/admin/login");
-  };
 
   const handleImageChange = (e) => {
     if (e.target.files[0]) {
