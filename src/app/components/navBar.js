@@ -17,7 +17,6 @@ export default function Navbar({ cart, setCart }) {
       setUser(savedUser);
     }
   }, []);
-  console.log(user);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);

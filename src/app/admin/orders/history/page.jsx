@@ -1,30 +1,28 @@
 "use client";
 import { useState, useEffect } from "react";
 import { NextResponse } from "next/server";
-import { db } from "../../../../../firebaseConfig";
-import { collection, query, onSnapshot } from "firebase/firestore";
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    const q = query(collection(db, "orders"));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const ordersData = [];
-      querySnapshot.forEach((doc) => {
-        const orderData = { id: doc.id, ...doc.data() };
-        if (
-          orderData.status ===
-          "Pesanan Sudah Diambil, dan Sudah Melakukan Pembayaran"
-        ) {
-          ordersData.push(orderData);
+    const fetchOrders = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/admin/orders/history`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-      });
-      setOrders(ordersData);
-    });
-
-    return () => unsubscribe();
+        const data = await response.json();
+        setOrders(data.data);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
+    fetchOrders();
   }, []);
+
   const formatDate = (timestamp) => {
     if (!timestamp) {
       return "Tanggal tidak tersedia";
@@ -42,14 +40,22 @@ export default function Orders() {
   };
 
   const handleDeleteOrder = async (orderId) => {
-    const response = await fetch(`/api/admin/orders/history/${orderId}`, {
-      method: "DELETE",
-    });
-    if (response.ok) {
-      alert("Order deleted successfully");
-      return NextResponse.json({ status: 200, message: "Order deleted" });
-    } else {
-      console.error("Failed to complete order");
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/admin/orders/history/${orderId}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (response.ok) {
+        alert("Order deleted successfully");
+        window.location.reload();
+        return NextResponse.json({ status: 200, message: "Order deleted" });
+      } else {
+        console.error("Failed to complete order");
+      }
+    } catch (error) {
+      console.error("Error deleting order:", error);
     }
   };
 

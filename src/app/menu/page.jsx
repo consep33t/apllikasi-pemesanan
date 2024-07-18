@@ -12,7 +12,9 @@ export default function Menu() {
   useEffect(() => {
     const fetchMenu = async () => {
       try {
-        const response = await fetch("/api/admin/dashboard/menu");
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/admin/dashboard/menu`
+        );
         const data = await response.json();
         if (response.ok) {
           setMenuItems(data.data);
@@ -49,7 +51,9 @@ export default function Menu() {
 
   const handleCardClick = async (id) => {
     try {
-      const response = await fetch(`/api/admin/dashboard/menu/${id}`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/admin/dashboard/menu/${id}`
+      );
       const data = await response.json();
       setSelectedItem(data.data);
       setIsModalOpen(true);

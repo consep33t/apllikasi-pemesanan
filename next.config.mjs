@@ -4,9 +4,14 @@ const nextConfig = {
   swcMinify: true,
   images: {
     domains: ["firebasestorage.googleapis.com"],
+    remotePatterns: [
+      {
+        hostname: "https://localhost:3001",
+      },
+    ],
   },
   env: {
-    BASE_URL: process.env.BASE_URL,
+    NEXT_PUBLIC_BASE_API_URL: process.env.NEXT_PUBLIC_BASE_API_URL,
   },
   async headers() {
     return [

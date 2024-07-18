@@ -16,17 +16,20 @@ export default function Cart({ isCartOpen, toggleCart, cart, setCart }) {
 
   const handleOrder = async () => {
     try {
-      const response = await fetch("/api/admin/orders/addorder", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user,
-          items: cart,
-          descriptionOrder,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/admin/orders/addorder`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user,
+            items: cart,
+            descriptionOrder,
+          }),
+        }
+      );
 
       if (response.ok) {
         setDescriptionOrder("");

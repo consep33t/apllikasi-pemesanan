@@ -1,51 +1,75 @@
 "use client";
 import { useState, useEffect } from "react";
-import { collection, query, onSnapshot } from "firebase/firestore";
-import { db } from "../../../../firebaseConfig";
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    const q = query(collection(db, "orders"));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const ordersData = [];
-      querySnapshot.forEach((doc) => {
-        const orderData = { id: doc.id, ...doc.data() };
-        if (
-          orderData.status !==
-          "Pesanan Sudah Diambil, dan Sudah Melakukan Pembayaran"
-        ) {
-          ordersData.push(orderData);
+    const fetchOrders = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/admin/orders`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch orders");
         }
-      });
-      setOrders(ordersData);
-    });
+        const result = await response.json();
 
-    return () => unsubscribe();
+        if (!Array.isArray(result.data)) {
+          throw new Error("Data fetched is not an array");
+        }
+
+        const filteredOrders = result.data.filter(
+          (order) =>
+            order.status !==
+            "Pesanan Sudah Diambil, dan Sudah Melakukan Pembayaran"
+        );
+        setOrders(filteredOrders);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
+
+    fetchOrders();
   }, []);
 
   const handleComplete = async (orderId) => {
-    const response = await fetch(`/api/admin/orders/${orderId}/complete`, {
-      method: "POST",
-    });
-    if (response.ok) {
-      alert("Order completed successfully");
-    } else {
-      console.error("Failed to complete order");
-      alert("Failed to complete order");
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/admin/orders/${orderId}/complete`,
+        {
+          method: "POST",
+        }
+      );
+      if (response.ok) {
+        alert("Order completed successfully");
+        window.location.reload();
+      } else {
+        console.error("Failed to complete order");
+        alert("Failed to complete order");
+      }
+    } catch (error) {
+      console.error("Error completing order:", error);
     }
   };
 
   const handlePickUp = async (orderId) => {
-    const response = await fetch(`/api/admin/orders/${orderId}/pickup`, {
-      method: "POST",
-    });
-    if (response.ok) {
-      alert("Order picked up successfully");
-    } else {
-      console.error("Failed to pick up order");
-      alert("Failed to pick up order");
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/admin/orders/${orderId}/pickup`,
+        {
+          method: "POST",
+        }
+      );
+      if (response.ok) {
+        alert("Order picked up successfully");
+        window.location.reload();
+      } else {
+        console.error("Failed to pick up order");
+        alert("Failed to pick up order");
+      }
+    } catch (error) {
+      console.error("Error picking up order:", error);
     }
   };
 

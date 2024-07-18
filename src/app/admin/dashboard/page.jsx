@@ -25,20 +25,23 @@ export default function AdminDashboard() {
         .replace("data:", "")
         .replace(/^.+,/, "");
 
-      const response = await fetch("/api/admin/dashboard/menu/addmenu", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          price,
-          description,
-          imageName: image.name,
-          imageData: base64String,
-          type,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/admin/dashboard/menu/addmenu`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            price,
+            description,
+            imageName: image.name,
+            imageData: base64String,
+            type,
+          }),
+        }
+      );
 
       if (response.ok) {
         setName("");
