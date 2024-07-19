@@ -6,7 +6,7 @@ export default function AdminDashboard() {
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
-  const [type, setType] = useState("");
+  const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleImageChange = (e) => {
@@ -38,7 +38,7 @@ export default function AdminDashboard() {
             description,
             imageName: image.name,
             imageData: base64String,
-            type,
+            category,
           }),
         }
       );
@@ -48,7 +48,7 @@ export default function AdminDashboard() {
         setPrice("");
         setDescription("");
         setImage(null);
-        setType("");
+        setCategory("");
         alert("Menu added successfully!");
       } else {
         alert("Error adding menu.");
@@ -102,11 +102,12 @@ export default function AdminDashboard() {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Type</label>
+          <label className="block text-gray-700">Category</label>
           <textarea
-            value={type}
+            value={category}
+            type="text"
             placeholder="pilih salah satu dari makanan, minuman, atau condimen"
-            onChange={(e) => setType(e.target.value)}
+            onChange={(e) => setCategory(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"
             required
           ></textarea>

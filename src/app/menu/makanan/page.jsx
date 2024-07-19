@@ -1,9 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
-import Navbar from "../components/navBar";
-import MenuCard from "../components/menuCard";
-
-export default function Menu() {
+import MenuCard from "@/app/components/menuCard";
+import Navbar from "@/app/components/navBar";
+const MakananPage = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [cart, setCart] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,7 +12,7 @@ export default function Menu() {
     const fetchMenu = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/admin/dashboard/menu`
+          `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/admin/dashboard/menu/category/makanan`
         );
         const data = await response.json();
         if (response.ok) {
@@ -71,8 +70,8 @@ export default function Menu() {
     <div className="min-h-screen bg-gray-100 w-full">
       <Navbar cart={cart} setCart={setCart} />
       <div className="p-4">
-        <h1 className="text-2xl font-bold mt-16 mb-5">Menu Nasi Goreng</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+        <h1 className="text-2xl font-bold mt-16 mb-5">Menu Makanan</h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4">
           {menuItems.map((item) => (
             <MenuCard
               key={item.id}
@@ -84,8 +83,8 @@ export default function Menu() {
         </div>
       </div>
       {isModalOpen && selectedItem && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 w-full">
-          <div className="bg-white p-4 rounded-lg w-5/6 relative">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg max-w-md w-full relative">
             <MenuCard item={selectedItem} addToCart={addToCart} />
             <button
               className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2"
@@ -98,4 +97,6 @@ export default function Menu() {
       )}
     </div>
   );
-}
+};
+
+export default MakananPage;

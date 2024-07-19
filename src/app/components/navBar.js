@@ -83,8 +83,9 @@ export default function Navbar({ cart, setCart }) {
             </button>
           </div>
           <div className="hidden lg:flex space-x-4 items-center">
-            <Link href="/menu">Menu Makanan</Link>
-            <Link href="/drinks">Minuman</Link>
+            <Link href="/menu/makanan">Menu Makanan</Link>
+            <Link href="/menu/minuman">Minuman</Link>
+            <Link href="/menu/condimen">condimen</Link>
             <button onClick={toggleCart} className="relative">
               <Image
                 src="/cart.svg"
