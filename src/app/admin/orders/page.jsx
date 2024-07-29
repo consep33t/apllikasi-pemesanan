@@ -77,9 +77,9 @@ export default function Orders() {
     switch (status) {
       case "Pesanan Diterima":
         return "bg-red-600";
-      case "Pesanan Selesai, silahkan diambil":
+      case "Pesanan Di Proses":
         return "bg-yellow-600";
-      case "Pesanan Sudah Diambil, dan Sudah Melakukan Pembayaran":
+      case "Pesanan Selesai":
         return "bg-green-600";
       default:
         return "bg-gray-600";
@@ -103,73 +103,80 @@ export default function Orders() {
   };
 
   return (
-    <div className="overflow-x-auto">
-      <table className="table table-xs table-pin-rows table-pin-cols">
-        <thead>
-          <tr>
-            <th>Nama</th>
-            <th>No. HP</th>
-            <th>Menu - Harga</th>
-            <th>Total</th>
-            <th>Tanggal</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        {orders.map((order) => (
-          <tbody key={order.id}>
-            {order.items.map((item, index) => (
-              <tr key={index}>
-                {index === 0 && (
-                  <>
-                    <td rowSpan={order.items.length}>{order.user.name}</td>
-                    <td rowSpan={order.items.length}>{order.user.phone}</td>
-                  </>
-                )}
-                <td>
-                  {item.name} - {item.price}
-                </td>
-                {index === 0 && (
-                  <>
-                    <td rowSpan={order.items.length}>
-                      {order.items.reduce(
-                        (total, item) => total + item.price,
-                        0
-                      )}
-                    </td>
-                    <td rowSpan={order.items.length}>
-                      {formatDate(order.date)}
-                    </td>
-                    <td rowSpan={order.items.length}>
-                      <p
-                        className={`${getStatusColor(
-                          order.status
-                        )} text-white rounded-sm px-2 py-1 text-center`}
-                      >
-                        {order.status}
-                      </p>
-                    </td>
-                    <td rowSpan={order.items.length}>
-                      <button
-                        onClick={() => handleComplete(order.id)}
-                        className="mr-2 bg-blue-500 text-white px-2 py-1 md:px-4 md:py-2 rounded"
-                      >
-                        Pesanan Selesai
-                      </button>
-                      <button
-                        onClick={() => handlePickUp(order.id)}
-                        className="mt-2 bg-green-500 text-white px-2 py-1 md:px-4 md:py-2 rounded"
-                      >
-                        Pesanan Diambil
-                      </button>
-                    </td>
-                  </>
-                )}
-              </tr>
-            ))}
-          </tbody>
-        ))}
-      </table>
+    <div className="p-4 w-full flex flex-col items-center">
+      <h1 className="text-2xl mb-5">Daftar Pesanan</h1>
+      <div className="overflow-x-auto w-full">
+        <table className="table table-xs table-pin-rows table-pin-cols rounded-none">
+          <thead>
+            <tr>
+              <th className="text-center">Nama</th>
+              <th className="text-center">No. HP</th>
+              <th className="text-center">Menu - Harga</th>
+              <th className="text-center">Total</th>
+              <th className="text-center">Tanggal</th>
+              <th className="text-center">Status</th>
+              <th className="text-center">Actions</th>
+            </tr>
+          </thead>
+          {orders.map((order) => (
+            <tbody key={order.id}>
+              {order.items.map((item, index) => (
+                <tr key={index}>
+                  {index === 0 && (
+                    <>
+                      <td className="text-center" rowSpan={order.items.length}>
+                        {order.user.name}
+                      </td>
+                      <td className="text-center" rowSpan={order.items.length}>
+                        {order.user.phone}
+                      </td>
+                    </>
+                  )}
+                  <td className="text-center">
+                    {item.name} - {item.price}
+                  </td>
+                  {index === 0 && (
+                    <>
+                      <td className="text-center" rowSpan={order.items.length}>
+                        {order.items.reduce(
+                          (total, item) => total + item.price,
+                          0
+                        )}
+                      </td>
+                      <td className="text-center" rowSpan={order.items.length}>
+                        {formatDate(order.date)}
+                      </td>
+                      <td className="text-center" rowSpan={order.items.length}>
+                        <p
+                          className={`${getStatusColor(
+                            order.status
+                          )} text-white rounded-sm px-2 py-1 text-center`}
+                        >
+                          {order.status}
+                        </p>
+                      </td>
+                      <td className="text-center" rowSpan={order.items.length}>
+                        <button
+                          onClick={() => handleComplete(order.id)}
+                          className="mr-2 bg-blue-500 text-white px-2 py-1 rounded-sm"
+                        >
+                          Pesanan Selesai
+                        </button>
+                        <button
+                          onClick={() => handlePickUp(order.id)}
+                          className="bg-green-500 text-white px-2 py-1 rounded-sm"
+                        >
+                          Pesanan Diambil
+                        </button>
+                      </td>
+                    </>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          ))}
+        </table>
+      </div>
     </div>
   );
 }

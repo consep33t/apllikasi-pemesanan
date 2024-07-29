@@ -1,7 +1,7 @@
 import Image from "next/image";
 const AdminNavBar = () => {
   return (
-    <div className="drawer fixed left-0 top-2/4 z-50">
+    <div className="drawer fixed left-0 top-2/4 z-50 ">
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content">
         <label
@@ -29,6 +29,9 @@ const AdminNavBar = () => {
           </h2>
           <li>
             <a href="/admin/dashboard">Dashboard</a>
+          </li>
+          <li>
+            <a href="/admin/menu">Menu</a>
           </li>
           <li>
             <a href="/admin/orders">Orders</a>

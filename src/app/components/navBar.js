@@ -83,9 +83,24 @@ export default function Navbar({ cart, setCart }) {
             </button>
           </div>
           <div className="hidden lg:flex space-x-4 items-center">
-            <Link href="/menu/makanan">Menu Makanan</Link>
-            <Link href="/menu/minuman">Minuman</Link>
-            <Link href="/menu/condimen">condimen</Link>
+            <Link
+              className="px-3 py-1 border-red-500 border hover:text-white hover:bg-red-500 rounded-md"
+              href="/menu/makanan"
+            >
+              Menu Makanan
+            </Link>
+            <Link
+              className="px-3 py-1 border-red-500 border hover:text-white hover:bg-red-500 rounded-md"
+              href="/menu/minuman"
+            >
+              Minuman
+            </Link>
+            <Link
+              className="px-3 py-1 border-red-500 border hover:text-white hover:bg-red-500 rounded-md"
+              href="/menu/condimen"
+            >
+              condimen
+            </Link>
             <button onClick={toggleCart} className="relative">
               <Image
                 src="/cart.svg"
@@ -105,18 +120,32 @@ export default function Navbar({ cart, setCart }) {
         <div className={`lg:hidden ${isMenuOpen ? "block" : "hidden"}`}>
           <div className="flex flex-col items-center space-y-4">
             <Link
-              href="/menu"
+              href="/menu/makanan"
               onClick={toggleMenu}
               className="z-20 pointer-events-auto"
             >
               Menu Makanan
             </Link>
             <Link
-              href="/drinks"
+              href="/menu/minuman"
               onClick={toggleMenu}
               className="z-20 pointer-events-auto"
             >
               Minuman
+            </Link>
+            <Link
+              href="/menu/condimen"
+              onClick={toggleMenu}
+              className="z-20 pointer-events-auto"
+            >
+              Condimen
+            </Link>
+            <Link
+              href="/menu"
+              onClick={toggleMenu}
+              className="z-20 pointer-events-auto"
+            >
+              Semua Menu
             </Link>
           </div>
         </div>

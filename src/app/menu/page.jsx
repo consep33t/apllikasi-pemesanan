@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Navbar from "../components/navBar";
 import MenuCard from "../components/menuCard";
+import Modal from "../components/modal";
 
 export default function Menu() {
   const [menuItems, setMenuItems] = useState([]);
@@ -85,8 +86,8 @@ export default function Menu() {
       </div>
       {isModalOpen && selectedItem && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 w-full">
-          <div className="bg-white p-4 rounded-lg w-5/6 relative">
-            <MenuCard item={selectedItem} addToCart={addToCart} />
+          <div className="bg-white p-4 rounded-lg w-2/3 relative">
+            <Modal item={selectedItem} addToCart={addToCart} />
             <button
               className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2"
               onClick={closeModal}
